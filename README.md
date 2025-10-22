@@ -15,19 +15,46 @@ Este repositorio ya incluye el archivo `.vscode/launch.json` configurado para de
 
 ```json
 {
-    "name": "Docker: Build",
-    "type": "dockerfile",
-    "request": "launch",
-    "dockerfile": "Dockerfile",
-    "contextPath": "${workspaceFolder}",
-    "args": [
-        "--build-arg",
-        "NODE_ENV=development",
-        "--build-arg",
-        "IMAGE_TAG=20-alpine"
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Development",
+            "type": "dockerfile",
+            "request": "launch",
+            "dockerfile": "Dockerfile",
+            "contextPath": "${workspaceFolder}",
+            "args": [
+                "--build-arg",
+                "FOLDER=web",
+                "--build-arg",
+                "NODE_ENV=development",
+                "--build-arg",
+                "RANDOM_ARG=1234"
+            ]
+        },
+        {
+            "name": "Production",
+            "type": "dockerfile",
+            "request": "launch",
+            "dockerfile": "Dockerfile",
+            "contextPath": "${workspaceFolder}",
+            "args": [
+                "--build-arg",
+                "FOLDER=webapp",
+                "--build-arg",
+                "NODE_ENV=production",
+                "--build-arg",
+                "RANDOM_ARG=5678"
+            ]
+        }
     ]
 }
 ```
+
+En este como ves tengo dos configuraciones: **Development** y **Production**. Puedes modificarlas según tus necesidades, agregando o quitando argumentos de construcción (`--build-arg`).
 
 ## 🎯 Cómo usar
 

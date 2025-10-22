@@ -27,7 +27,11 @@
             "contextPath": "${workspaceFolder}",
             "args": [
                 "--build-arg",
-                "TAG=20-alpine"
+                "FOLDER=webapp",
+                "--build-arg",
+                "NODE_ENV=production",
+                "--build-arg",
+                "RANDOM_ARG=5678"
             ]
         }
     ]
