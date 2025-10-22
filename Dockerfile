@@ -1,14 +1,16 @@
-# 🔧 Argumentos de construcción
-ARG IMAGE_TAG=18-alpine
-
 # 🐳 Imagen base
-FROM node:${IMAGE_TAG}
+FROM node:22-alpine
+
+# 🔧 Argumentos de construcción
+ARG FOLDER=/app
+
+ARG RANDOM_ARG=unused_value
 
 # 🔧 Argumentos de construcción
 ARG NODE_ENV=production
 
 # Check variables de construcción
-RUN echo IMAGE_TAG=$IMAGE_TAG NODE_ENV=$NODE_ENV
+RUN echo TAG=$TAG NODE_ENV=$NODE_ENV
 
 # 📋 Metadatos
 LABEL maintainer="tu-email@ejemplo.com" \    
@@ -19,7 +21,7 @@ ENV NODE_ENV=${NODE_ENV} \
     PORT=5000
 
 # 📁 Establecer directorio de trabajo
-WORKDIR /app
+WORKDIR ${FOLDER}
 
 # 📦 Copiar archivos de dependencias
 COPY package*.json ./
