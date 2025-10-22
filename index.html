@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Express - Demo Docker</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .header {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .header h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 2.5em;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 1.1em;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 8px 16px;
+      background: #4CAF50;
+      color: white;
+      border-radius: 20px;
+      font-size: 0.9em;
+      margin-top: 15px;
+    }
+
+    .status.loading {
+      background: #FFC107;
+    }
+
+    .status.error {
+      background: #f44336;
+    }
+
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .section h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #667eea;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1em;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+      background: #764ba2;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #673a8f;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(118, 75, 162, 0.3);
+    }
+
+    .response {
+      background: #f5f5f5;
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .response.error {
+      border-left-color: #f44336;
+      background: #ffebee;
+    }
+
+    .response.success {
+      border-left-color: #4CAF50;
+      background: #f1f8f4;
+    }
+
+    .usuario-list {
+      display: grid;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .usuario-card {
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .usuario-info h3 {
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .usuario-info p {
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    .usuario-id {
+      background: #667eea;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+    }
+
+    .loading {
+      text-align: center;
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 1.8em;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .info-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196F3;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    .info-box strong {
+      color: #1976D2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🚀 API Express en Docker</h1>
+      <p>Demo interactiva de una aplicación Node.js + Express</p>
+      <div class="status" id="status">
+        <span class="spinner"></span>
+        Verificando servidor...
+      </div>
+    </div>
+
+    <!-- Info Box -->
+    <div class="section">
+      <div class="info-box">
+        <strong>ℹ️ Info:</strong> Esta es una demostración de cómo empaquetar una aplicación Express en Docker. 
+        Puedes ver el código en <code>app.js</code> y el Dockerfile en <code>Dockerfile.nodejs</code>
+      </div>
+    </div>
+
+    <!-- Sección de Salud -->
+    <div class="section">
+      <h2>📊 Health Check</h2>
+      <button class="btn-primary" onclick="checkHealth()">Verificar Estado del Servidor</button>
+      <div id="healthResponse" style="display:none; margin-top: 20px;">
+        <div class="response success" id="healthData"></div>
+      </div>
+    </div>
+
+    <!-- Sección de Usuarios -->
+    <div class="grid-2">
+      <!-- Listar Usuarios -->
+      <div class="section">
+        <h2>👥 Obtener Usuarios</h2>
+        <button class="btn-secondary" onclick="getUsuarios()">Cargar Usuarios</button>
+        <div id="usuariosResponse" style="display:none; margin-top: 20px;">
+          <div class="usuario-list" id="usuariosData"></div>
+        </div>
+      </div>
+
+      <!-- Crear Usuario -->
+      <div class="section">
+        <h2>➕ Crear Usuario</h2>
+        <div class="form-group">
+          <label for="nombreInput">Nombre:</label>
+          <input type="text" id="nombreInput" placeholder="Ej: Carlos">
+        </div>
+        <div class="form-group">
+          <label for="emailInput">Email:</label>
+          <input type="email" id="emailInput" placeholder="Ej: carlos@ejemplo.com">
+        </div>
+        <button class="btn-primary" onclick="crearUsuario()">Crear</button>
+        <div id="crearResponse" style="display:none; margin-top: 20px;">
+          <div class="response success" id="crearData"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buscar Usuario por ID -->
+    <div class="section">
+      <h2>🔍 Buscar Usuario por ID</h2>
+      <div class="form-group">
+        <label for="idInput">ID del Usuario:</label>
+        <input type="number" id="idInput" placeholder="Ej: 1" min="1">
+      </div>
+      <button class="btn-secondary" onclick="getUsuarioById()">Buscar</button>
+      <div id="buscarResponse" style="display:none; margin-top: 20px;">
+        <div class="response success" id="buscarData"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+
+    // Verificar salud del servidor al cargar
+    window.addEventListener('load', checkHealth);
+
+    async function checkHealth() {
+      try {
+        const response = await fetch('/health');
+        const data = await response.json();
+        
+        updateStatus('Servidor Activo ✓', 'success');
+        
+        const healthResponse = document.getElementById('healthResponse');
+        const healthData = document.getElementById('healthData');
+        healthData.textContent = JSON.stringify(data, null, 2);
+        healthResponse.style.display = 'block';
+      } catch (error) {
+        updateStatus('Servidor No Disponible ✗', 'error');
+        console.error('Error:', error);
+      }
+    }
+
+    async function getUsuarios() {
+      try {
+        const response = await fetch(`${API_BASE}/usuarios`);
+        const data = await response.json();
+        
+        const usuariosResponse = document.getElementById('usuariosResponse');
+        const usuariosData = document.getElementById('usuariosData');
+        
+        if (data.usuarios && data.usuarios.length > 0) {
+          usuariosData.innerHTML = data.usuarios.map(u => `
+            <div class="usuario-card">
+              <div class="usuario-info">
+                <h3>${u.nombre}</h3>
+                <p>📧 ${u.email}</p>
+              </div>
+              <div class="usuario-id">${u.id}</div>
+            </div>
+          `).join('');
+        } else {
+          usuariosData.innerHTML = '<p>No hay usuarios</p>';
+        }
+        
+        usuariosResponse.style.display = 'block';
+      } catch (error) {
+        mostrarError('Error al obtener usuarios', error);
+      }
+    }
+
+    async function crearUsuario() {
+      const nombre = document.getElementById('nombreInput').value;
+      const email = document.getElementById('emailInput').value;
+      
+      if (!nombre || !email) {
+        alert('Por favor completa todos los campos');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE}/usuarios`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nombre, email })
+        });
+        
+        const data = await response.json();
+        
+        const crearResponse = document.getElementById('crearResponse');
+        const crearData = document.getElementById('crearData');
+        crearData.textContent = JSON.stringify(data, null, 2);
+        crearResponse.style.display = 'block';
+        
+        // Limpiar inputs
+        document.getElementById('nombreInput').value = '';
+        document.getElementById('emailInput').value = '';
+        
+        // Recargar lista de usuarios
+        setTimeout(getUsuarios, 500);
+      } catch (error) {
+        mostrarError('Error al crear usuario', error);
+      }
+    }
+
+    async function getUsuarioById() {
+      const id = document.getElementById('idInput').value;
+      
+      if (!id) {
+        alert('Por favor ingresa un ID');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE}/usuarios/${id}`);
+        const data = await response.json();
+        
+        const buscarResponse = document.getElementById('buscarResponse');
+        const buscarData = document.getElementById('buscarData');
+        buscarData.textContent = JSON.stringify(data, null, 2);
+        buscarResponse.classList.toggle('error', response.status >= 400);
+        buscarResponse.style.display = 'block';
+      } catch (error) {
+        mostrarError('Error al buscar usuario', error);
+      }
+    }
+
+    function updateStatus(message, type) {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.className = `status ${type}`;
+    }
+
+    function mostrarError(titulo, error) {
+      console.error(titulo, error);
+      alert(`${titulo}: ${error.message}`);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+    "name": "Docker: Build",
+    "type": "dockerfile",
+    "request": "launch",
+    "dockerfile": "Dockerfile",
+    "contextPath": "${workspaceFolder}",
+    "args": [
+        "--build-arg",
+        "NODE_ENV=development",
+        "--build-arg",
+        "IMAGE_TAG=20-alpine"
+    ]
+}
