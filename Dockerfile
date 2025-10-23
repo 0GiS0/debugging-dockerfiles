@@ -10,7 +10,7 @@ ARG RANDOM_ARG=unused_value
 ARG NODE_ENV=production
 
 # Check variables de construcción
-RUN echo TAG=$TAG NODE_ENV=$NODE_ENV
+RUN echo NODE_ENV=$NODE_ENV
 
 # 📋 Metadatos
 LABEL maintainer="tu-email@ejemplo.com" \    
@@ -27,7 +27,7 @@ WORKDIR ${FOLDER}
 COPY package*.json ./
 
 # ⚙️ Instalar dependencias
-RUN npm install --production
+RUN npm install
 
 # 💻 Copiar código de la aplicación
 COPY . .

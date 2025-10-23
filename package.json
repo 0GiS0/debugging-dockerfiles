@@ -7,7 +7,11 @@
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "keywords": ["express", "docker", "nodejs"],
+  "keywords": [
+    "express",
+    "docker",
+    "nodejs"
+  ],
   "author": "",
   "license": "MIT",
   "type": "commonjs",
@@ -15,6 +19,7 @@
     "express": "^4.18.2"
   },
   "devDependencies": {
+    "eslint": "^9.38.0",
     "nodemon": "^3.0.1"
   }
 }
