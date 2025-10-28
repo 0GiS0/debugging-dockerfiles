@@ -81,10 +81,10 @@ En este como ves tengo dos configuraciones: **Development** y **Production**. Pu
 1. **Instala la extensión Docker DX** en Visual Studio Code
 2. **Abre este proyecto** en VS Code
 3. **Ve al panel de Debug** (Ctrl+Shift+D o Cmd+Shift+D)
-4. **Selecciona "Docker: Build"** en el menú desplegable
+4. **Selecciona "Development" o "Production"** en el menú desplegable
 5. **Presiona F5** o haz clic en el botón de play
 
-¡Eso es todo! Ahora puedes depurar tu Dockerfile paso a paso, ver las variables de construcción, y entender exactamente qué está pasando en cada capa de tu imagen Docker.
+¡Eso es todo! La depuración se parará en los breakpoints que hayas establecido en tu Dockerfile, permitiéndote inspeccionar variables, el file explorer en el lado izquierdo e incluso conectarte al contenedor escribiendo `exec`en la pestaña `Debug Console`.
 
 ## ✨ Beneficios
 
@@ -92,6 +92,8 @@ En este como ves tengo dos configuraciones: **Development** y **Production**. Pu
 - ✅ Visualiza variables de construcción
 - ✅ Entiende cada paso del proceso de build
 - ✅ Identifica problemas rápidamente
+- ✅ Mejora la calidad de tus imágenes Docker
+
 
 
 <div align="center">
